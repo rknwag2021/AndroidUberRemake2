@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthMethodPickerLayout;
@@ -60,6 +59,7 @@ public class SplashScreenActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.splash);
         init();
     }
 
@@ -108,6 +108,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         TextInputEditText edt_first_name = (TextInputEditText)itemView.findViewById(R.id.edt_first_name);
         TextInputEditText edt_last_name = (TextInputEditText)itemView.findViewById(R.id.edt_last_name);
         TextInputEditText edt_phone=(TextInputEditText)itemView.findViewById(R.id.edt_phone_number);
+        TextInputEditText edt_address=(TextInputEditText)itemView.findViewById(R.id.edt_address);
 
         Button btn_continue = (Button)itemView.findViewById(R.id.btn_register);
         builder.setView(itemView);
@@ -121,7 +122,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                 String first_name = edt_first_name.getText().toString();
                 String last_name=edt_last_name.getText().toString();
                 String mobile_no = edt_phone.getText().toString();
-
+                String address=edt_address.getText().toString();
                 if (first_name.isEmpty()){
                     Toast.makeText(SplashScreenActivity.this,"Pleas fill the FIRST NAME field",Toast.LENGTH_SHORT).show();
                 }
@@ -129,6 +130,12 @@ public class SplashScreenActivity extends AppCompatActivity {
                 {
 
                         Toast.makeText(SplashScreenActivity.this,"Pleas fill the LAST NAME field",Toast.LENGTH_SHORT).show();
+
+                }
+                else if(address.isEmpty())
+                {
+
+                    Toast.makeText(SplashScreenActivity.this,"Pleas fill the ADDRESS field",Toast.LENGTH_SHORT).show();
 
                 }
                 else if(mobile_no.isEmpty())
@@ -144,21 +151,28 @@ public class SplashScreenActivity extends AppCompatActivity {
                     Colector+=last_name+"\n";
                     Colector+=mobile_no+"\n";
                     Toast.makeText(SplashScreenActivity.this,"User Info \n:"+Colector,Toast.LENGTH_SHORT).show();
-
+                    // NOTE - WE HAVE TO REMOVE THIS COLLECTOR
 
                     database =  FirebaseDatabase.getInstance();
                     DatabaseReference mRef =  database.getReference().child("Users").push();
                     FirebaseUser user =  firebaseAuth.getCurrentUser();
                     FirebaseUser name =  firebaseAuth.getCurrentUser();
                     FirebaseUser phone =  firebaseAuth.getCurrentUser();
+                    FirebaseUser work_address =  firebaseAuth.getCurrentUser();
+
                     String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                    mRef.child("User").child("userId").setValue(userId);
-                    mRef.child("User").child("name").setValue(first_name);
-                    mRef.child("User").child("phone").setValue(mobile_no);
+                    mRef.child("user").child("userId").setValue(userId);
+                    mRef.child("user").child("name").setValue(first_name);
+                    mRef.child("user").child("phone").setValue(mobile_no);
+                    mRef.child("user").child("work_address").setValue(address);
+
+                   startActivity(new Intent(SplashScreenActivity.this, Permission_Activity.class));
+
 
 
 
                 }
+
 
 
 
